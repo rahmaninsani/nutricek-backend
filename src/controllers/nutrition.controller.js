@@ -1,8 +1,11 @@
+const FormData = require('form-data');
 const { NutritionApiService } = require('../services');
+
 class NutritionController {
   static async getAll(req, res) {
     try {
-      const { data: recipe } = await NutritionApiService.getRecipe('Burger');
+      const { query } = req.query;
+      const { data: recipe } = await NutritionApiService.getRecipe(query);
 
       res.status(200).json({
         code: res.statusCode,
@@ -13,14 +16,23 @@ class NutritionController {
       res.sendStatus(500).end();
     }
   }
+
   static async add(req, res) {
     try {
-      const { name } = req.body;
+      const formData = new FormData();
+      const { buffer } = req.file;
+
+      formData.append('file', buffer, 'makanan.jpg');
+
+      const { data } = await NutritionApiService.getNutritionByImage(formData);
 
       res.status(201).json({
         code: res.statusCode,
         status: 'Created',
-        data: { name },
+        data: {
+          category: data.category,
+          nutrition: data.nutrition,
+        },
       });
     } catch (err) {
       res.sendStatus(500).end();

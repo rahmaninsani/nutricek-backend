@@ -2,12 +2,18 @@ const Service = require('../service');
 const { NutritionApi } = require('../../models/api');
 
 class NutritionApiService extends Service {
-  static async getRecipe(queryValue) {
-    this.model.defaults.params = {
-      ...this.model.defaults.params,
-      query: queryValue,
+  static async getRecipe(query) {
+    const options = {
+      params: {
+        query,
+      },
     };
-    return await this.model.get('/recipes/complexSearch');
+
+    return await this.model.get('/recipes/complexSearch', options);
+  }
+
+  static async getNutritionByImage(formData) {
+    return await this.model.post('/food/images/analyze', formData);
   }
 }
 

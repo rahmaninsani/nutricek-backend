@@ -3,8 +3,6 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const morgan = require('morgan');
-const multer = require('multer');
-const upload = multer();
 
 const routes = require('./routes');
 

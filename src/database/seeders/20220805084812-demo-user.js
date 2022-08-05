@@ -1,7 +1,20 @@
 'use strict';
 
-module.exports = {
-  async up(queryInterface, Sequelize) {},
+const { hash } = require('../../utils');
 
-  async down(queryInterface, Sequelize) {},
+module.exports = {
+  async up(queryInterface, Sequelize) {
+    const preparedData = {
+      name: 'Rahman Insani',
+      email: 'rahman@gmail.com',
+      password: await hash('user'),
+      created_at: new Date(),
+      updated_at: new Date(),
+    };
+    return queryInterface.bulkInsert('user', [preparedData]);
+  },
+
+  async down(queryInterface, Sequelize) {
+    return queryInterface.bulkDelete('user', null, {});
+  },
 };

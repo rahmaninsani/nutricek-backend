@@ -6,6 +6,7 @@ module.exports = {
       idUser: {
         allowNull: false,
         field: 'id_user',
+        primaryKey: true,
         references: {
           model: 'user',
           key: 'id',
@@ -15,6 +16,7 @@ module.exports = {
       idNutritionHistory: {
         allowNull: false,
         field: 'id_nutrition_history',
+        primaryKey: true,
         references: {
           model: 'nutrition_history',
           key: 'id',
@@ -23,6 +25,7 @@ module.exports = {
       },
       nutritionName: {
         allowNull: false,
+        primaryKey: true,
         field: 'nutrition_name',
         type: Sequelize.ENUM('Calories', 'Carbs', 'Fat', 'Protein'),
       },

@@ -17,7 +17,6 @@
   "author": "Rahman Insani <rahmaninsani54@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@faker-js/faker": "^7.3.0",
     "axios": "^0.27.2",
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",

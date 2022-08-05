@@ -24,6 +24,7 @@ module.exports = (sequelize, DataTypes) => {
       idUser: {
         allowNull: false,
         field: 'id_user',
+        primaryKey: true,
         references: {
           model: 'user',
           key: 'id',
@@ -33,6 +34,7 @@ module.exports = (sequelize, DataTypes) => {
       idNutritionHistory: {
         allowNull: false,
         field: 'id_nutrition_history',
+        primaryKey: true,
         references: {
           model: 'nutrition_history',
           key: 'id',
@@ -41,6 +43,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       nutritionName: {
         allowNull: false,
+        primaryKey: true,
         field: 'nutrition_name',
         type: DataTypes.ENUM('Calories', 'Carbs', 'Fat', 'Protein'),
       },

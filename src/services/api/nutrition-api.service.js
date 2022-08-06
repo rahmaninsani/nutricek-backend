@@ -1,4 +1,4 @@
-const Service = require('../service');
+const Service = require('./service');
 const { NutritionApi } = require('../../models/api');
 
 class NutritionApiService extends Service {

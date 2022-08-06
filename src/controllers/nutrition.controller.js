@@ -1,16 +1,18 @@
 const FormData = require('form-data');
-const { NutritionApiService } = require('../services');
+const { NutritionApiService } = require('../services/api');
 
 class NutritionController {
   static async getAll(req, res) {
     try {
       const { query } = req.query;
-      const { data: recipe } = await NutritionApiService.getRecipe(query);
+      const { data } = await NutritionApiService.getRecipe(query);
 
       res.status(200).json({
         code: res.statusCode,
         status: 'OK',
-        data: { recipe },
+        data: {
+          results: data.results,
+        },
       });
     } catch (err) {
       res.sendStatus(500).end();
@@ -22,7 +24,7 @@ class NutritionController {
       const formData = new FormData();
       const { buffer } = req.file;
 
-      formData.append('file', buffer, 'makanan.jpg');
+      formData.append('file', buffer, 'food.jpg');
 
       const { data } = await NutritionApiService.getNutritionByImage(formData);
 

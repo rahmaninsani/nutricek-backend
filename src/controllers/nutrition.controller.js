@@ -28,6 +28,7 @@ class NutritionController {
     try {
       const { email } = req.user;
       const formData = new FormData();
+      const foodNutritions = [];
       // const { buffer } = req.file;
       // formData.append('file', buffer, 'food.jpg');
 
@@ -48,12 +49,19 @@ class NutritionController {
         Object.entries(nutritions).map(async ([key, values]) => {
           if (key === 'recipesUsed') return;
 
+          const nutritionName = key[0].toUpperCase().concat(key.slice(1));
+          const data = {
+            name: nutritionName,
+            weight: values.value,
+            unit: values.unit,
+          };
+
+          foodNutritions.push(data);
+
           const payload = {
             idUser,
             idFood,
-            name: key,
-            weight: values.value,
-            unit: values.unit,
+            ...data,
           };
 
           await NutritionDbService.createNutrition(payload, transaction);
@@ -66,8 +74,8 @@ class NutritionController {
         code: res.statusCode,
         status: 'Created',
         data: {
-          category: data.category,
-          nutrition: data.nutrition,
+          foodName,
+          foodNutritions,
         },
       });
     } catch (err) {

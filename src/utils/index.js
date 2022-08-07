@@ -1,6 +1,6 @@
 const { binToUUID, uuidToBin } = require('./uuid-binary.util');
 const { hash, compare } = require('./bcrypt.util');
-const generateAccessToken = require('./access-token.util');
+const { generateAccessToken, generateRefreshToken, verifyAccessToken, verifyRefreshToken } = require('./token.util');
 
 module.exports = {
   binToUUID,
@@ -8,4 +8,7 @@ module.exports = {
   hash,
   compare,
   generateAccessToken,
+  generateRefreshToken,
+  verifyAccessToken,
+  verifyRefreshToken,
 };

@@ -3,7 +3,7 @@
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-  class NutritionHistory extends Model {
+  class Food extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,19 +11,23 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.hasMany(models.NutritionHistoryDetail, {
-        foreignKey: 'id_nutrition_history',
-        as: 'NutritionHistoryDetail',
+      this.hasMany(models.Nutrition, {
+        foreignKey: 'id_food',
+        as: 'Nutrition',
       });
     }
   }
-  NutritionHistory.init(
+  Food.init(
     {
       id: {
         allowNull: false,
         defaultValue: sequelize.literal('UUID_TO_BIN(UUID(), 1)'),
         primaryKey: true,
         type: 'BINARY(16)',
+      },
+      name: {
+        allowNull: false,
+        type: DataTypes.STRING(100),
       },
       date: {
         allowNull: false,
@@ -42,9 +46,9 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: 'NutritionHistory',
-      tableName: 'nutrition_history',
+      modelName: 'Food',
+      tableName: 'food',
     }
   );
-  return NutritionHistory;
+  return Food;
 };

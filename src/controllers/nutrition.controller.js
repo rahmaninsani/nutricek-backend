@@ -1,5 +1,8 @@
-const FormData = require('form-data');
+const { sequelize } = require('../models/db');
 const { NutritionApiService } = require('../services/api');
+const { UserDbService, FoodDbService, NutritionDbService } = require('../services/db');
+const FormData = require('form-data');
+const fs = require('fs');
 
 class NutritionController {
   static async getAll(req, res) {
@@ -20,13 +23,44 @@ class NutritionController {
   }
 
   static async add(req, res) {
-    try {
-      const formData = new FormData();
-      const { buffer } = req.file;
+    const transaction = await sequelize.transaction();
 
-      formData.append('file', buffer, 'food.jpg');
+    try {
+      const { email } = req.user;
+      const formData = new FormData();
+      // const { buffer } = req.file;
+      // formData.append('file', buffer, 'food.jpg');
+
+      const buffer = fs.readFileSync(__dirname + '/food.jpeg');
+      formData.append('file', buffer, 'food.jpeg');
 
       const { data } = await NutritionApiService.getNutritionByImage(formData);
+      let foodName = data.category.name;
+      const nutritions = data.nutrition;
+
+      foodName = foodName[0].toUpperCase().concat(foodName.slice(1));
+      await FoodDbService.createFood({ name: foodName }, transaction);
+
+      const { id: idUser } = await UserDbService.findOneUserByEmail(email);
+      const { id: idFood } = await FoodDbService.findLastInsertedRow(transaction);
+
+      await Promise.all(
+        Object.entries(nutritions).map(async ([key, values]) => {
+          if (key === 'recipesUsed') return;
+
+          const payload = {
+            idUser,
+            idFood,
+            name: key,
+            weight: values.value,
+            unit: values.unit,
+          };
+
+          await NutritionDbService.createNutrition(payload, transaction);
+        })
+      );
+
+      await transaction.commit();
 
       res.status(201).json({
         code: res.statusCode,
@@ -37,6 +71,7 @@ class NutritionController {
         },
       });
     } catch (err) {
+      transaction.rollback();
       res.sendStatus(500).end();
     }
   }

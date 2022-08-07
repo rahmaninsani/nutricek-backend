@@ -6,6 +6,7 @@ const upload = multer({ storage: storage });
 const { NutritionController } = require('../controllers');
 
 router.get('/', NutritionController.getAll);
-router.post('/', upload.single('file'), NutritionController.add);
+// router.post('/', upload.single('file'), NutritionController.add);
+router.post('/', NutritionController.add);
 
 module.exports = router;

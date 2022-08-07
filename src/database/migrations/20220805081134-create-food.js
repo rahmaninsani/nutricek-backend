@@ -2,12 +2,16 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('nutrition_history', {
+    await queryInterface.createTable('food', {
       id: {
         allowNull: false,
         defaultValue: Sequelize.literal('(UUID_TO_BIN(UUID(), 1))'),
         primaryKey: true,
         type: 'BINARY(16)',
+      },
+      name: {
+        allowNull: false,
+        type: Sequelize.STRING(100),
       },
       date: {
         allowNull: false,
@@ -26,6 +30,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('nutrition_history');
+    await queryInterface.dropTable('food');
   },
 };

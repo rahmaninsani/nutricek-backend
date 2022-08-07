@@ -2,7 +2,7 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('nutrition_history_detail', {
+    await queryInterface.createTable('nutrition', {
       idUser: {
         allowNull: false,
         field: 'id_user',
@@ -13,26 +13,29 @@ module.exports = {
         },
         type: 'BINARY(16)',
       },
-      idNutritionHistory: {
+      idFood: {
         allowNull: false,
-        field: 'id_nutrition_history',
+        field: 'id_food',
         primaryKey: true,
         references: {
-          model: 'nutrition_history',
+          model: 'food',
           key: 'id',
         },
         type: 'BINARY(16)',
       },
-      nutritionName: {
+      name: {
         allowNull: false,
         primaryKey: true,
-        field: 'nutrition_name',
         type: Sequelize.ENUM('Calories', 'Carbs', 'Fat', 'Protein'),
       },
       weight: {
         allowNull: false,
         type: Sequelize.INTEGER,
         defaultValue: 0,
+      },
+      unit: {
+        allowNull: false,
+        type: Sequelize.STRING(10),
       },
       createdAt: {
         allowNull: false,
@@ -47,6 +50,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('nutrition_history_detail');
+    await queryInterface.dropTable('nutrition');
   },
 };

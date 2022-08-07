@@ -3,7 +3,7 @@
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-  class NutritionHistoryDetail extends Model {
+  class Nutrition extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -14,12 +14,12 @@ module.exports = (sequelize, DataTypes) => {
       this.belongsTo(models.User, {
         foreignKey: 'id_user',
       });
-      this.belongsTo(models.User, {
-        foreignKey: 'id_nutrition_history',
+      this.belongsTo(models.Food, {
+        foreignKey: 'id_food',
       });
     }
   }
-  NutritionHistoryDetail.init(
+  Nutrition.init(
     {
       idUser: {
         allowNull: false,
@@ -31,26 +31,29 @@ module.exports = (sequelize, DataTypes) => {
         },
         type: 'BINARY(16)',
       },
-      idNutritionHistory: {
+      idFood: {
         allowNull: false,
-        field: 'id_nutrition_history',
+        field: 'id_food',
         primaryKey: true,
         references: {
-          model: 'nutrition_history',
+          model: 'food',
           key: 'id',
         },
         type: 'BINARY(16)',
       },
-      nutritionName: {
+      name: {
         allowNull: false,
         primaryKey: true,
-        field: 'nutrition_name',
         type: DataTypes.ENUM('Calories', 'Carbs', 'Fat', 'Protein'),
       },
       weight: {
         allowNull: false,
         type: DataTypes.INTEGER,
         defaultValue: 0,
+      },
+      unit: {
+        allowNull: false,
+        type: DataTypes.STRING(10),
       },
       createdAt: {
         allowNull: false,
@@ -65,9 +68,9 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: 'NutritionHistoryDetail',
-      tableName: 'nutrition_history_detail',
+      modelName: 'Nutrition',
+      tableName: 'nutrition',
     }
   );
-  return NutritionHistoryDetail;
+  return Nutrition;
 };

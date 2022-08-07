@@ -1,8 +1,7 @@
-const sequelize = require('sequelize');
 const { User } = require('../../models/db');
 
 const Service = require('./service');
-const { hash, compare, binToUUID, uuidToBin } = require('../../utils');
+const { hash } = require('../../utils');
 
 class UserDbService extends Service {
   static async findOneUserByEmail(email) {

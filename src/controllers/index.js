@@ -1,7 +1,7 @@
 const AuthController = require('./auth.controller');
-const NutritionController = require('./nutrition.controller');
+const FoodNutritionController = require('./food-nutrition.controller');
 
 module.exports = {
   AuthController,
-  NutritionController,
+  FoodNutritionController,
 };

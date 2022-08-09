@@ -3,7 +3,7 @@ const { UserDbService } = require('../services/db');
 const { compare, generateAccessToken, generateRefreshToken, verifyRefreshToken } = require('../utils');
 
 class AuthController {
-  static async register(req, res) {
+  static async signup(req, res) {
     const transaction = await sequelize.transaction();
 
     try {
@@ -51,14 +51,16 @@ class AuthController {
       }
 
       const accessToken = generateAccessToken({ name: user.name, email: user.email });
-      const refreshToken = generateRefreshToken({ name: user.name, email: user.email });
+      // const refreshToken = generateRefreshToken({ name: user.name, email: user.email });
 
       res.status(201).json({
         code: res.statusCode,
         status: 'Created',
         data: {
+          name: user.name,
+          email: user.email,
           accessToken,
-          refreshToken,
+          // refreshToken,
         },
       });
     } catch (err) {

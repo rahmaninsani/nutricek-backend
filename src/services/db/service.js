@@ -16,6 +16,10 @@ class Service {
   static async create(payload, options) {
     return await this.model.create(payload, options);
   }
+
+  static async delete(options) {
+    return await this.model.destroy(options);
+  }
 }
 
 module.exports = Service;

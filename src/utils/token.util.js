@@ -4,9 +4,10 @@ const refreshSecret = process.env.REFRESH_SECRET || '$ReFrEsH-sEcReT$';
 
 const generateAccessToken = ({ name, email }) => {
   const data = { name, email };
-  const options = { expiresIn: '15 minutes' };
+  // const options = { expiresIn: '15 minutes' };
 
-  return jwt.sign(data, accessSecret, options);
+  // return jwt.sign(data, accessSecret, options);
+  return jwt.sign(data, accessSecret);
 };
 
 const generateRefreshToken = ({ name, email }) => {

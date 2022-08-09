@@ -2,21 +2,21 @@ const router = require('express').Router();
 
 const { isAuthenticated } = require('../middlewares');
 
-const registerRoute = require('./register.route');
+const signupRoute = require('./signup.route');
 const signinRoute = require('./signin.route');
 const refreshTokenRoute = require('./refresh-token.route');
 const signoutRoute = require('./signout.route');
-const nutritionRoute = require('./nutrition.route');
+const foodNutritionRoute = require('./food-nutrition.route');
 
-router.use('/register', registerRoute);
+router.use('/signup', signupRoute);
 router.use('/signin', signinRoute);
 router.use('/refresh-token', isAuthenticated, refreshTokenRoute);
 router.use('/signout', signoutRoute);
-router.use('/nutrition', isAuthenticated, nutritionRoute);
-router.use('/', (req, res) => {
-  res.status(200).json({
+router.use('/food-nutrition', isAuthenticated, foodNutritionRoute);
+router.use('*', (req, res) => {
+  res.status(404).json({
     code: res.statusCode,
-    status: 'OK',
+    status: 'Not Found',
   });
 });
 

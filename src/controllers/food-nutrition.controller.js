@@ -2,9 +2,9 @@ const { sequelize } = require('../models/db');
 const { NutritionApiService } = require('../services/api');
 const { UserDbService, FoodDbService, NutritionDbService } = require('../services/db');
 const FormData = require('form-data');
-const fs = require('fs');
+// const fs = require('fs');
 
-class NutritionController {
+class FoodNutritionController {
   static async getAll(req, res) {
     try {
       const { query } = req.query;
@@ -17,7 +17,7 @@ class NutritionController {
           results: data.results,
         },
       });
-    } catch (err) {
+    } catch (error) {
       res.sendStatus(500).end();
     }
   }
@@ -29,11 +29,11 @@ class NutritionController {
       const { email } = req.user;
       const formData = new FormData();
       const foodNutritions = [];
-      // const { buffer } = req.file;
-      // formData.append('file', buffer, 'food.jpg');
+      const { buffer } = req.file;
+      formData.append('file', buffer, 'food.jpg');
 
-      const buffer = fs.readFileSync(__dirname + '/food.jpeg');
-      formData.append('file', buffer, 'food.jpeg');
+      // const buffer = fs.readFileSync(__dirname + '/food.jpeg');
+      // formData.append('file', buffer, 'food.jpeg');
 
       const { data } = await NutritionApiService.getNutritionByImage(formData);
       let foodName = data.category.name;
@@ -49,11 +49,14 @@ class NutritionController {
         Object.entries(nutritions).map(async ([key, values]) => {
           if (key === 'recipesUsed') return;
 
-          const nutritionName = key[0].toUpperCase().concat(key.slice(1));
+          const name = key[0].toUpperCase().concat(key.slice(1));
+          const weight = values.value;
+          const unit = values.unit === 'calories' ? 'kcal' : values.unit;
+
           const data = {
-            name: nutritionName,
-            weight: values.value,
-            unit: values.unit,
+            name,
+            weight,
+            unit,
           };
 
           foodNutritions.push(data);
@@ -70,19 +73,51 @@ class NutritionController {
 
       await transaction.commit();
 
+      const { id: uuidFood } = await FoodDbService.findOneFood({ idFood });
+
       res.status(201).json({
         code: res.statusCode,
         status: 'Created',
         data: {
+          id: uuidFood,
           foodName,
           foodNutritions,
         },
       });
-    } catch (err) {
+    } catch (error) {
+      transaction.rollback();
+      res.sendStatus(500).end();
+    }
+  }
+
+  static async delete(req, res) {
+    const transaction = await sequelize.transaction();
+
+    try {
+      const { idFood } = req.params;
+      const { email } = req.user;
+      const { id: idUser } = await UserDbService.findOneUserByEmail(email);
+
+      const deleteNutrition = await NutritionDbService.deleteNutrition({ idUser, idFood }, transaction);
+      if (deleteNutrition < 1) {
+        return res.status(404).json({
+          code: res.statusCode,
+          status: 'Food Nutrition Not Found',
+        });
+      }
+
+      await FoodDbService.deleteFood({ idFood }, transaction);
+      await transaction.commit();
+
+      res.status(204).json({
+        code: res.statusCode,
+        status: 'No Content',
+      });
+    } catch (error) {
       transaction.rollback();
       res.sendStatus(500).end();
     }
   }
 }
 
-module.exports = NutritionController;
+module.exports = FoodNutritionController;

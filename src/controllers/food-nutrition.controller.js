@@ -2,7 +2,6 @@ const { sequelize } = require('../models/db');
 const { NutritionApiService } = require('../services/api');
 const { UserDbService, FoodDbService, NutritionDbService } = require('../services/db');
 const FormData = require('form-data');
-// const fs = require('fs');
 
 class FoodNutritionController {
   static async getAll(req, res) {
@@ -31,9 +30,6 @@ class FoodNutritionController {
       const foodNutritions = [];
       const { buffer } = req.file;
       formData.append('file', buffer, 'food.jpg');
-
-      // const buffer = fs.readFileSync(__dirname + '/food.jpeg');
-      // formData.append('file', buffer, 'food.jpeg');
 
       const { data } = await NutritionApiService.getNutritionByImage(formData);
       let foodName = data.category.name;

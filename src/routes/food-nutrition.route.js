@@ -7,7 +7,6 @@ const { FoodNutritionController } = require('../controllers');
 
 router.get('/', FoodNutritionController.getAll);
 router.post('/', upload.single('file'), FoodNutritionController.add);
-// router.post('/', FoodNutritionController.add);
 router.delete('/:idFood', FoodNutritionController.delete);
 
 module.exports = router;

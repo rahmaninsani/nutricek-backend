@@ -2,10 +2,10 @@
   "name": "nutricek-backend",
   "version": "1.0.0",
   "description": "Nutricek Backend",
-  "main": "src/index.js",
+  "main": "index.js",
   "scripts": {
-    "start": "node src/index.js",
-    "dev": "nodemon src/index.js",
+    "start": "node index.js",
+    "dev": "nodemon index.js",
     "db-create": "sequelize-cli db:create",
     "table-create": "sequelize-cli db:migrate",
     "table-drop": "sequelize-cli db:migrate:undo:all",

@@ -96,24 +96,6 @@ class AuthController {
       res.sendStatus(500).end();
     }
   }
-
-  static async signout(req, res) {
-    // try {
-    const { authorization } = req.headers;
-    console.log(authorization);
-
-    req.user.deleteToken(req.token, (err, user) => {
-      if (error) return res.status(400).send(error);
-
-      res.status(204).json({
-        code: res.statusCode,
-        status: 'No Content',
-      });
-    });
-    // } catch (error) {
-    //   res.sendStatus(500).end();
-    // }
-  }
 }
 
 module.exports = AuthController;

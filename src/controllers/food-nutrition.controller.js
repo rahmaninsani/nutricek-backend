@@ -44,66 +44,66 @@ class FoodNutritionController {
   static async add(req, res) {
     const transaction = await sequelize.transaction();
 
-    try {
-      const { email } = req.user;
-      const formData = new FormData();
-      const foodNutritions = [];
-      const { buffer } = req.file;
-      formData.append('file', buffer, 'food.jpg');
+    // try {
+    const { email } = req.user;
+    const formData = new FormData();
+    const foodNutritions = [];
+    const { buffer } = req.file;
+    formData.append('file', buffer, 'food.jpg');
 
-      const { data } = await NutritionApiService.getNutritionByImage(formData);
-      let foodName = data.category.name;
-      const nutritions = data.nutrition;
+    const { data } = await NutritionApiService.getNutritionByImage(formData);
+    let foodName = data.category.name;
+    const nutritions = data.nutrition;
 
-      foodName = foodName[0].toUpperCase().concat(foodName.slice(1));
-      await FoodDbService.createFood({ name: foodName }, transaction);
+    foodName = foodName[0].toUpperCase().concat(foodName.slice(1));
+    await FoodDbService.createFood({ name: foodName }, transaction);
 
-      const { id: idUser } = await UserDbService.findOneUserByEmail(email);
-      const { id: idFood } = await FoodDbService.findLastInsertedRow(transaction);
+    const { id: idUser } = await UserDbService.findOneUserByEmail(email);
+    const { id: idFood } = await FoodDbService.findLastInsertedRow(transaction);
 
-      await Promise.all(
-        Object.entries(nutritions).map(async ([key, values]) => {
-          if (key === 'recipesUsed') return;
+    await Promise.all(
+      Object.entries(nutritions).map(async ([key, values]) => {
+        if (key === 'recipesUsed') return;
 
-          const name = key[0].toUpperCase().concat(key.slice(1));
-          const weight = values.value;
-          const unit = values.unit === 'calories' ? 'kcal' : values.unit;
+        const name = key[0].toUpperCase().concat(key.slice(1));
+        const weight = values.value;
+        const unit = values.unit === 'calories' ? 'kcal' : values.unit;
 
-          const data = {
-            name,
-            weight,
-            unit,
-          };
+        const data = {
+          name,
+          weight,
+          unit,
+        };
 
-          foodNutritions.push(data);
+        foodNutritions.push(data);
 
-          const payload = {
-            idUser,
-            idFood,
-            ...data,
-          };
+        const payload = {
+          idUser,
+          idFood,
+          ...data,
+        };
 
-          await NutritionDbService.createNutrition(payload, transaction);
-        })
-      );
+        await NutritionDbService.createNutrition(payload, transaction);
+      })
+    );
 
-      await transaction.commit();
+    await transaction.commit();
 
-      const { id: uuidFood } = await FoodDbService.findOneFood({ idFood });
+    const { id: uuidFood } = await FoodDbService.findOneFood({ idFood });
 
-      res.status(201).json({
-        code: res.statusCode,
-        status: 'Created',
-        data: {
-          id: uuidFood,
-          foodName,
-          foodNutritions,
-        },
-      });
-    } catch (error) {
-      transaction.rollback();
-      res.sendStatus(500).end();
-    }
+    res.status(201).json({
+      code: res.statusCode,
+      status: 'Created',
+      data: {
+        id: uuidFood,
+        foodName,
+        foodNutritions,
+      },
+    });
+    // } catch (error) {
+    //   transaction.rollback();
+    //   res.sendStatus(500).end();
+    // }
   }
 
   static async delete(req, res) {

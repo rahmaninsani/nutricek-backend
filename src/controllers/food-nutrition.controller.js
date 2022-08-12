@@ -6,15 +6,35 @@ const FormData = require('form-data');
 class FoodNutritionController {
   static async getAll(req, res) {
     try {
-      const { query } = req.query;
-      const { data } = await NutritionApiService.getRecipe(query);
+      const { email } = req.user;
+      const { id: idUser } = await UserDbService.findOneUserByEmail(email);
+      const data = await NutritionDbService.findAllFoodNutrition(idUser);
+
+      const nutritions = data.reduce((prev, curr) => {
+        const name = curr.name.toLowerCase();
+        const index = prev.findIndex((obj) => obj?.date === curr.date);
+
+        if (index < 0) {
+          const foodNutritions = {
+            date: curr.date,
+            calories: 0,
+            carbs: 0,
+            fat: 0,
+            protein: 0,
+          };
+          foodNutritions[name] = curr.weight;
+          prev.push(foodNutritions);
+        } else {
+          prev[index][name] += curr.weight;
+        }
+
+        return prev;
+      }, []);
 
       res.status(200).json({
         code: res.statusCode,
         status: 'OK',
-        data: {
-          results: data.results,
-        },
+        data: { nutritions },
       });
     } catch (error) {
       res.sendStatus(500).end();
@@ -91,16 +111,6 @@ class FoodNutritionController {
 
     try {
       const { idFood } = req.params;
-      const { email } = req.user;
-      const { id: idUser } = await UserDbService.findOneUserByEmail(email);
-
-      const deleteNutrition = await NutritionDbService.deleteNutrition({ idUser, idFood }, transaction);
-      if (deleteNutrition < 1) {
-        return res.status(404).json({
-          code: res.statusCode,
-          status: 'Food Nutrition Not Found',
-        });
-      }
 
       await FoodDbService.deleteFood({ idFood }, transaction);
       await transaction.commit();

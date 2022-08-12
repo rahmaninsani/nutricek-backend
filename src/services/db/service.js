@@ -1,6 +1,10 @@
 class Service {
   static model;
 
+  static async findAll(options) {
+    return await this.model.findAll({ raw: true, ...options });
+  }
+
   static async findOne(options) {
     return await this.model.findOne({ raw: true, ...options });
   }

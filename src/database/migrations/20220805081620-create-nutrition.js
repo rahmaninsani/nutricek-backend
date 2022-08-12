@@ -6,6 +6,7 @@ module.exports = {
       idUser: {
         allowNull: false,
         field: 'id_user',
+        onDelete: 'CASCADE',
         primaryKey: true,
         references: {
           model: 'user',
@@ -16,6 +17,7 @@ module.exports = {
       idFood: {
         allowNull: false,
         field: 'id_food',
+        onDelete: 'CASCADE',
         primaryKey: true,
         references: {
           model: 'food',

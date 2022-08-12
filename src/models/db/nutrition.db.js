@@ -13,9 +13,11 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       this.belongsTo(models.User, {
         foreignKey: 'id_user',
+        onDelete: 'CASCADE',
       });
       this.belongsTo(models.Food, {
         foreignKey: 'id_food',
+        onDelete: 'CASCADE',
       });
     }
   }
@@ -24,6 +26,7 @@ module.exports = (sequelize, DataTypes) => {
       idUser: {
         allowNull: false,
         field: 'id_user',
+        onDelete: 'CASCADE',
         primaryKey: true,
         references: {
           model: 'user',
@@ -34,6 +37,7 @@ module.exports = (sequelize, DataTypes) => {
       idFood: {
         allowNull: false,
         field: 'id_food',
+        onDelete: 'CASCADE',
         primaryKey: true,
         references: {
           model: 'food',

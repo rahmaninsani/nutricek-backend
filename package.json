@@ -31,5 +31,10 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.19"
+  },
+  "engines": {
+    "node": "^16.16.0",
+    "npm": "^8.17.0",
+    "yarn": "^1.22.19"
   }
 }
